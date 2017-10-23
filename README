@@ -1,10 +1,3 @@
-PLEASE NOTE: This is a fork of the rcqp package authored by Bernard Desgraupes
-and Sylvain Loiseau. It has been modified to facilitate installation 
-on a Mac OSX system with minimal requirements, see file in folder data-raw.
-ANDREAS BLAETTE, 22.10.2017
-
-
-
 The rcqp package is an extension for the open source statistical software
 R. It is an implementation in R of the Corpus Query Protocol which lets you
 execute queries and perform statistical tasks over large text corpora with
@@ -27,7 +20,7 @@ system are found in the file INSTALL.
 Authors
 =======
 	Bernard Desgraupes <bernard.desgraupes@u-paris10.fr>
-	University Paris-10 Paris Ouest Nanterre La DŽfense
+	University Paris-10 Paris Ouest Nanterre La D?fense
 	Laboratoire Modal'X
 
 	Sylvain Loiseau <sylvain.loiseau@univ-paris13.fr>
