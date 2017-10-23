@@ -1,8 +1,3 @@
----
-title: "Preparing the rcqp.mac package"
-output: html_document
----
-
 ## Purpose
 
 The package is a fork of the 'rcqp' package authored by Bernard Desgraupes
@@ -27,7 +22,7 @@ Project.
 install.packages("rcqp", repos = "http://polmine.sowi.uni-due.de/packages", type = "mac.binary")
 ```
 
-## Documentation of Modifications
+## Documentation
 
 The package is derived from the 'rcqp' package through a set of (minimal)
 modifications. Preparing this package requires a system that has the compiled
