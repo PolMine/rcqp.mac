@@ -69,6 +69,28 @@ function is defined as follows:
 }
 ```
 
+The remaining problem to make things portable is that the rcqp.so file now contains absolute paths to the other dynamic libraries. That needs to be changed from the shell.
+
+A very instructive discussion is offere [here](https://blogs.oracle.com/dipol/dynamic-libraries,-rpath,-and-mac-os).
+
+```{sh}
+install_name_tool -change \
+libpcre.1.dylib \ # may be different 
+@loader_path/../libs/libpcre.1.dylib \
+  /Users/blaette/Lab/github/rcqp.mac/inst/libs/rcqp.so
+
+install_name_tool -change \
+libglib-2.0.0.dylib \
+@loader_path/../libs/libglib-2.0.0.dylib \
+  /Users/blaette/Lab/github/rcqp.mac/inst/libs/rcqp.so
+
+install_name_tool -change \
+libintl.8.dylib \
+@loader_path/../libs/libintl.8.dylib \
+  /Users/blaette/Lab/github/rcqp.mac/inst/libs/rcqp.so
+
+otool -L rcqp.so # to check whether that has worked.
+```
 To check whether the package can be built and installed.
 
 ```{sh}

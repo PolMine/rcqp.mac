@@ -1,0 +1,84 @@
+---
+title: "rcqp.win.Rmd"
+author: "Andreas Blaette"
+date: "21 1 2018"
+output: html_document
+---
+
+# Preparing the Mac binary release of rcqp
+
+The basic steps to prepare the binary version of rcqp is not complicated at all. The source code of the package is turned into a tarball and built.
+
+```{sh}
+R CMD build rcqp
+R CMD INSTALL --build rcqp_0.4.tar.gz
+```
+
+This results in a tgz file. This zipped file is opened again, and we put the dynamic libraries the package dynamic library (rcqp.so) depends on into the libs folder. A modification of zzz.R will ensure that these libraries are loaded. The biggest remaining problem is, that dynamic libraries on Mac include hard links to the dependent dynamic libraries. This can be identified by calling ...
+
+```{sh}
+otool -L
+```
+
+This in a somewhat lengthy procedure, these hard paths in all the relevant dynamic libraries (.so-files) are replaced with relative links. 
+
+### libglib-2.0.0.dylib
+
+```{sh}
+install_name_tool -change \
+  /usr/local/opt/glib/lib/libglib-2.0.0.dylib \
+  libglib-2.0.0.dylib \
+  /Users/blaette/Lab/github/rcqp.mac/inst/libs/libglib-2.0.0.dylib
+
+install_name_tool -change \
+  /usr/lib/libiconv.2.dylib \
+  @loader_path/../libs/libiconv.2.dylib \
+	/Users/blaette/Lab/github/rcqp.mac/inst/libs/libglib-2.0.0.dylib
+	
+install_name_tool -change \
+  /usr/local/opt/pcre/lib/libpcre.1.dylib \
+  @loader_path/../libs/libpcre.1.dylib \
+	/Users/blaette/Lab/github/rcqp.mac/inst/libs/libglib-2.0.0.dylib
+
+install_name_tool -change \
+  /usr/local/opt/gettext/lib/libintl.8.dylib \
+  @loader_path/../libs/libintl.8.dylib \
+	/Users/blaette/Lab/github/rcqp.mac/inst/libs/libglib-2.0.0.dylib
+```
+
+### libiconv.2.dylib
+
+```{sh}
+install_name_tool -change \
+  /usr/lib/libiconv.2.dylib  \
+  libiconv.2.dylib \
+	/Users/blaette/Lab/github/rcqp.mac/inst/libs/libiconv.2.dylib
+```
+
+### libintl.8.dylib
+
+```{sh}
+install_name_tool -change \
+  /usr/lib/libiconv.2.dylib  \
+  @loader_path/../libs/libiconv.2.dylib \
+	/Users/blaette/Lab/github/rcqp.mac/inst/libs/libintl.8.dylib	
+```
+
+### libpcre.1.dylib
+
+```{sh}
+install_name_tool -change \
+libpcre.1.dylib \ # may be different 
+@loader_path/../libs/libpcre.1.dylib \
+  /Users/blaette/Lab/github/rcqp.mac/inst/libs/libglib-2.0.0.dylib
+
+install_name_tool -change \
+libglib-2.0.0.dylib \
+@loader_path/../libs/libglib-2.0.0.dylib \
+  /Users/blaette/Lab/github/rcqp.mac/inst/libs/rcqp.so
+
+install_name_tool -change \
+libintl.8.dylib \
+@loader_path/../libs/libintl.8.dylib \
+  /Users/blaette/Lab/github/rcqp.mac/inst/libs/rcqp.so
+```
